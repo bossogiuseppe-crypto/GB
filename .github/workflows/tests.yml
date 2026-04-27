@@ -1,0 +1,29 @@
+name: Test Codice Fiscale
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout codice
+        uses: actions/checkout@v4
+
+      - name: Esegui test
+        run: swift CodiceFiscale/CodiceFiscaleSwiftFiddle.swift
+
+      - name: Verifica risultati
+        run: |
+          OUTPUT=$(swift CodiceFiscale/CodiceFiscaleSwiftFiddle.swift)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "0 falliti"; then
+            echo "✅ Tutti i test sono passati"
+          else
+            echo "❌ Alcuni test sono falliti"
+            exit 1
+          fi
